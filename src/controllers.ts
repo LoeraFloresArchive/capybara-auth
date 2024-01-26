@@ -56,9 +56,7 @@ const RegisterController = async (
   try {
     const { username, password, email } = req.body;
     if (!username || !password || !email) {
-      res.status(400);
-      res.send({ message: "Missing required fields" });
-      return;
+      return next(new BadRequestError());
     }
     const user = {
       username,
