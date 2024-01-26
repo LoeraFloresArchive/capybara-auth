@@ -6,6 +6,7 @@ import {
   ErrorRequestHandler,
   Errback,
 } from "express";
+import { ExpressError, NotFoundError } from "./errors";
 const express = require("express");
 const app = express();
 const router = require("./routes");
@@ -35,19 +36,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/auth", router);
 
-class ExpressError extends Error {
-  status: number;
-  constructor(message: string, status: number) {
-    super();
-    this.message = message;
-    this.status = status;
-  }
-}
-class NotFoundError extends ExpressError {
-  constructor(message = "Not Found") {
-    super(message, 404);
-  }
-}
+
 app.use(function(req: Request, res: Response, next: NextFunction) {
   return next(new NotFoundError());
 });
