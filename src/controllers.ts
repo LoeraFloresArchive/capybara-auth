@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { connection } from "./db";
+import { BadRequestError } from "./errors";
 
 const query = (sql: string, args: any) => {
   return new Promise((resolve, reject) => {
@@ -18,8 +19,7 @@ const LoginController = async (
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      res.status(400);
-      res.send({ message: "Missing required fields" });
+      return next(new BadRequestError());
     }
     const results = (await query(
       "SELECT username, email, id, password from auth_users WHERE email = ?",
